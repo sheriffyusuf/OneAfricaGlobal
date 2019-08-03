@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "87630594560",
+    "firebase_url": "https://one-africa-global-ca582.firebaseio.com",
+    "project_id": "one-africa-global-ca582",
+    "storage_bucket": "one-africa-global-ca582.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87630594560:android:e3cdf99702168f70",
+        "android_client_info": {
+          "package_name": "com.one_africa_global"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87630594560-ev974bf3qa2sor3ohcgj2boqb2td4bb7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK8_Ol8oFS4USiUpGpmkyzeluwd1yxopc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87630594560-ev974bf3qa2sor3ohcgj2boqb2td4bb7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
