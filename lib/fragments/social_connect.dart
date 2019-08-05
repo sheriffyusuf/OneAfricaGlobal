@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:one_africa_global/color/hex_color.dart';
+import 'package:one_africa_global/constants/strings.dart';
 import 'package:one_africa_global/pages/main_page.dart';
+import 'package:one_africa_global/webviews/social_webview.dart';
 
 class SocialConnectScreen extends StatefulWidget {
   @override
@@ -73,7 +75,13 @@ class _SocialConnectState extends State<SocialConnectScreen> {
                   ),
                   RaisedButton(
                     child: Text('Connect'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SocialWebView('Facebook',Strings.facebook_link)));
+
+                    },
                     color: Colors.blue[900],
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -103,7 +111,13 @@ class _SocialConnectState extends State<SocialConnectScreen> {
                   ),
                   RaisedButton(
                     child: Text('Connect'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SocialWebView('Twitter',Strings.twitter_link)));
+
+                    },
                     color: Colors.lightBlueAccent,
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -133,7 +147,13 @@ class _SocialConnectState extends State<SocialConnectScreen> {
                   ),
                   RaisedButton(
                     child: Text('Connect'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SocialWebView('Instagram',Strings.instagram_link)));
+
+                    },
                     color: Colors.brown,
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(

@@ -19,4 +19,8 @@ class Strings{
   static const String discover_oag="Discover OAG";
 
   static const String settings="Settings";
+
+  static const String facebook_link="https://www.facebook.com/One-Africa-Global-278996575915513/";
+  static const String twitter_link="https://twitter.com/OneAfricaGlobal";
+  static const String instagram_link="https://www.instagram.com/oneafricaglobal/";
 }
