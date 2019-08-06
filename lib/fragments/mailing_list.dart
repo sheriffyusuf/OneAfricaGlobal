@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:marquee_flutter/marquee_flutter.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:one_africa_global/color/hex_color.dart';
 import 'package:http/http.dart' as http;
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
-class MailingScreen extends StatelessWidget {
-  TextEditingController emailField= TextEditingController();
+class MailingScreen extends StatefulWidget {
   static final URL='http://api.oneafricaglobal.com/oag/subscribe.php';
+
+  @override
+  _MailingScreenState createState() => _MailingScreenState();
+}
+
+class _MailingScreenState extends State<MailingScreen> {
+  TextEditingController emailField= TextEditingController();
+
+  bool _saving = false;
+
+  GlobalKey _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +38,8 @@ class MailingScreen extends StatelessWidget {
      /* drawer: Drawer(
         child: ListView(),
       ),*/
-      body:
-      Center(child:
+      body:ModalProgressHUD(
+      child:Center(child:
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -55,7 +67,7 @@ class MailingScreen extends StatelessWidget {
                 controller: emailField,
               ),
             ),
-            
+
             RaisedButton(
               child: Text(
                 'Submit',
@@ -65,6 +77,9 @@ class MailingScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20)),
               onPressed: () {
                 print(emailField.text);
+                setState(() {
+                  _saving=true;
+                });
                 _subscribeEmail();
                 emailField.clear();
               },
@@ -116,13 +131,72 @@ class MailingScreen extends StatelessWidget {
           ],
         ),
       ),
+        inAsyncCall: _saving,
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
+    )
+
     );
   }
 
   _subscribeEmail() async {
-    var response = await http.post(URL,body:{'emailAddress':emailField.text});
+    var response = await http.post(MailingScreen.URL,body:{'emailAddress':emailField.text});
     print("Response status: ${response.statusCode}");
     print("Response body: ${response.body}");
+    if(response.statusCode==200){
+      setState(() {
+        _saving=false;
+        showSuccessDialog();
+    //    _isSuccessful=true;
+
+
+      });
+    }
+    else if(response.statusCode < 200 || response.statusCode > 300){
+      setState(() {
+        _saving=false;
+       showFailureDialog();
+        //    _isSuccessful=true;
+
+
+      });
+
+    }
+  }
+  showSuccessDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Success"),
+            alertSubtitle: richSubtitle("Email Subscription successful"),
+            alertType: RichAlertType.SUCCESS,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        });
   }
 
+  showFailureDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Not Successful"),
+            alertSubtitle: richSubtitle("Please try again!!!"),
+            alertType: RichAlertType.ERROR,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+    );
+  }
 }

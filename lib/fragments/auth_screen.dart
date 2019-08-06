@@ -6,6 +6,7 @@ import 'package:one_africa_global/pages/main_page.dart';
 import 'package:one_africa_global/fragments/social_connect.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 
 class AuthScreen extends StatefulWidget {
@@ -17,28 +18,24 @@ class AuthScreen extends StatefulWidget {
   _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
-  bool _isPressed = false, _animatingReveal = false;
-  bool _isSuccessful= false;
+class _AuthScreenState extends State<AuthScreen>{
+  bool _isPressed = false,
+      _animatingReveal = false;
+  bool _isSuccessful = false;
   int _state = 0;
   double _width = double.infinity;
   Animation _animation;
   GlobalKey _globalKey = GlobalKey();
   AnimationController _controller;
-  TextEditingController emailField= TextEditingController();
-  static final URL='http://api.oneafricaglobal.com/oag/subscribe.php';
+  TextEditingController emailField = TextEditingController();
+  static final URL = 'http://api.oneafricaglobal.com/oag/subscribe.php';
   bool _saving = false;
 
 
-  @override
-  void deactivate() {
-    reset();
-    super.deactivate();
-  }
 
   @override
   dispose() {
-  //  _controller.dispose();
+    //  _controller.dispose();
     super.dispose();
   }
 
@@ -62,12 +59,11 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             children: <Widget>[_showBody(context)],
           ),
         )
-        ,inAsyncCall: _saving,
+          , inAsyncCall: _saving,
           opacity: 0.5,
           progressIndicator: CircularProgressIndicator(),
         )
     );
-
   }
 
   Widget _showBody(BuildContext context) {
@@ -130,31 +126,31 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   Widget _showPasswordInput() {
     return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-    child: new TextFormField(
-    style: TextStyle(color: Colors.white),
-    maxLines: 1,
-    controller: emailField,
-    obscureText: false,
-    autofocus: false,
-    textInputAction: TextInputAction.done,
-    onFieldSubmitted: (term){
-      print(emailField.text);
-      _subscribeEmail();
-      emailField.clear();
-    },
-    decoration: new InputDecoration(
-    hintText: 'Email Address',
-    hintStyle: TextStyle(color:Colors.white70,fontSize: 14),
-    border: OutlineInputBorder(
-    borderSide: BorderSide(
-    color: Colors.teal
-    ),
-    /*icon: new Icon(
+        child: new TextFormField(
+          style: TextStyle(color: Colors.white),
+          maxLines: 1,
+          controller: emailField,
+          obscureText: false,
+          autofocus: false,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: (term) {
+            print(emailField.text);
+            _subscribeEmail();
+            emailField.clear();
+          },
+          decoration: new InputDecoration(
+            hintText: 'Email Address',
+            hintStyle: TextStyle(color: Colors.white70, fontSize: 14),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.teal
+              ),
+              /*icon: new Icon(
               Icons.lock,
               color: Colors.grey,
             )*/
-    ),
-    /*validator: (value) {
+            ),
+            /*validator: (value) {
           if (value.isEmpty) {
             setState(() {
               _isLoading = false;
@@ -163,9 +159,9 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
           }
         },
         onSaved: (value) => _password = value,*/
-    )
-    ,
-    ));
+          )
+          ,
+        ));
   }
 
   Widget _showSecondaryButton(BuildContext context) {
@@ -175,12 +171,12 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
               context,
               MaterialPageRoute(builder: (context) => SocialConnectScreen()));
         },
-        child: _isSuccessful?
+        child: _isSuccessful ?
         new Text('Continue',
             style: new TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w300,
-                color: Colors.white)):new Text('Skip',
+                color: Colors.white)) : new Text('Skip',
             style: new TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w300,
@@ -194,7 +190,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   Widget _showPrimaryButton(BuildContext context) {
     return new Padding(
         padding: EdgeInsets.fromLTRB(30.0, 35.0, 30.0, 10.0),
-      /* child: PhysicalModel(
+        /* child: PhysicalModel(
            color: Colors.blue,
            elevation: calculateElevation(),
            borderRadius: BorderRadius.circular(25.0),
@@ -229,7 +225,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             onPressed: () {
               print(emailField.text);
               setState(() {
-                _saving=true;
+                _saving = true;
               });
               _subscribeEmail();
               emailField.clear();
@@ -241,77 +237,125 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   }
 
   _subscribeEmail() async {
-    var response = await http.post(URL,body:{'emailAddress':emailField.text});
+    var response = await http.post(
+        URL, body: {'emailAddress': emailField.text});
     print("Response status: ${response.statusCode}");
     print("Response body: ${response.body}");
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       setState(() {
-        _saving=false;
-        _isSuccessful=true;
+        _saving = false;
+        showSuccessDialog();
+        _isSuccessful = true;
       });
     }
-  }
+    else if (response.statusCode < 200 || response.statusCode > 300) {
+      setState(() {
+        _saving = false;
+        showFailureDialog();
+        //    _isSuccessful=true;
 
-  void animateButton() {
-    double initialWidth = _globalKey.currentContext.size.width;
 
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
-      ..addListener(() {
+      });
+    }
+
+   /* void animateButton() {
+      double initialWidth = _globalKey.currentContext.size.width;
+
+      _controller =
+          AnimationController(
+              duration: Duration(milliseconds: 300), vsync: this);
+      _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
+        ..addListener(() {
+          setState(() {
+            _width = initialWidth - ((initialWidth - 48.0) * _animation.value);
+          });
+        });
+      _controller.forward();
+
+      setState(() {
+        _state = 1;
+      });
+
+      Timer(Duration(milliseconds: 3300), () {
         setState(() {
-          _width = initialWidth - ((initialWidth - 48.0) * _animation.value);
+          _state = 2;
         });
       });
-    _controller.forward();
 
-    setState(() {
-      _state = 1;
-    });
-
-    Timer(Duration(milliseconds: 3300), () {
-      setState(() {
-        _state = 2;
-      });
-    });
-
-   /* Timer(Duration(milliseconds: 3600), () {
+      *//* Timer(Duration(milliseconds: 3600), () {
       _animatingReveal = true;
      // widget.callback();
-    });*/
-  }
+    });*//*
+    }*/
 
-  Widget buildButtonChild() {
-    if (_state == 0) {
-      return Text(
-        'Login',
-        style: TextStyle(color: Colors.white, fontSize: 16.0),
-      );
-    } else if (_state == 1) {
-      return SizedBox(
-        height: 36.0,
-        width: 36.0,
-        child: CircularProgressIndicator(
-          value: null,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      );
-    } else {
-      return Icon(Icons.check, color: Colors.white);
+    Widget buildButtonChild() {
+      if (_state == 0) {
+        return Text(
+          'Login',
+          style: TextStyle(color: Colors.white, fontSize: 16.0),
+        );
+      } else if (_state == 1) {
+        return SizedBox(
+          height: 36.0,
+          width: 36.0,
+          child: CircularProgressIndicator(
+            value: null,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        );
+      } else {
+        return Icon(Icons.check, color: Colors.white);
+      }
+    }
+
+    double calculateElevation() {
+      if (_animatingReveal) {
+        return 0.0;
+      } else {
+        return _isPressed ? 6.0 : 4.0;
+      }
+    }
+
+    void reset() {
+      _width = double.infinity;
+      _animatingReveal = false;
+      _state = 0;
     }
   }
-
-  double calculateElevation() {
-    if (_animatingReveal) {
-      return 0.0;
-    } else {
-      return _isPressed ? 6.0 : 4.0;
-    }
+  showSuccessDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Success"),
+            alertSubtitle: richSubtitle("Email Subscription successful"),
+            alertType: RichAlertType.SUCCESS,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        });
   }
 
-  void reset() {
-    _width = double.infinity;
-    _animatingReveal = false;
-    _state = 0;
+  showFailureDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Not Successful"),
+            alertSubtitle: richSubtitle("Please try again!!!"),
+            alertType: RichAlertType.ERROR,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+    );
   }
 }

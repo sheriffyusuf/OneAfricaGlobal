@@ -9,6 +9,8 @@ class NewsLetterScreen extends StatefulWidget {
 }
 
 class _NewsLetterState extends State<NewsLetterScreen> {
+  TextEditingController emailField= TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

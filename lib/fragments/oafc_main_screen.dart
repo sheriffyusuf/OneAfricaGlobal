@@ -79,7 +79,7 @@ class OneAfricaFootballScreen extends StatelessWidget{
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DisplayPage('One Africa Football Clinic', 'https://oneafricafootballclinic.com')));
+                            builder: (context) => DisplayPage('One Africa Football Clinic', 'http://oafootballacademy.com/')));
 
                   },
                   child: Container(

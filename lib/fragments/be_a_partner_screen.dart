@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:one_africa_global/color/hex_color.dart';
 import 'package:one_africa_global/models/be_a_partner.dart';
 import 'package:one_africa_global/presentation/custom_icons_icons.dart';
 import 'package:one_africa_global/utils/http_request.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+import 'package:http/http.dart' as http;
 
 
 
 class BeAPartnerScreen extends StatefulWidget {
 
-  static final CREATE_POST_URL = 'http://api.oneafricaglobal.com/oag/partner.php';
+
   static final RAND='https://ptsv2.com/t/x02c5-1564789027/post';
 //  static final URL='http://api.oneafricaglobal.com/oag/subscribe.php';
 
@@ -17,7 +20,7 @@ class BeAPartnerScreen extends StatefulWidget {
 }
 
 class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
-
+  static final CREATE_POST_URL = 'http://api.oneafricaglobal.com/oag/partner.php';
   final _formKey = GlobalKey<FormState>();
   final _beAPartner=BeAPartner();
 
@@ -36,6 +39,7 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
   final TextEditingController tcWebsite = TextEditingController();
 
   final TextEditingController tcProposal = TextEditingController();
+  bool _saving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,8 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
         appBar: AppBar(
         title: new Text("Be A Partner"),
     ),
-    body: Padding(
+    body: ModalProgressHUD(
+    child:Padding(
       padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 0.0,bottom: 0.0),
       child: Form(
         key: _formKey,
@@ -177,8 +182,19 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
                 if(form.validate()) {
                   form.save();
                   print(_beAPartner);
+                  setState(() {
+                    _saving = true;
+                  });
                   sub(_beAPartner);
 
+                    tcCompanyName.clear();
+                tcCompanyAddress.clear();
+                tcContactPerson.clear();
+                tcPositionOfContact.clear();
+                tcPhoneNumber.clear();
+                tcEmailAddress.clear();
+                tcWebsite.clear();
+                tcProposal.clear();
 
                 }
                // _sub(_beAPartner);
@@ -204,18 +220,77 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
           ],
         ),
       ),
-    ));
+    ), inAsyncCall: _saving,
+      opacity: 0.5,
+      progressIndicator: CircularProgressIndicator(),
+    )
+    );
   }
 
-  Future sub(BeAPartner becomeAPartner) async {
+   sub(BeAPartner becomeAPartner) async {
     HttpRequest _util = HttpRequest();
-   
-   try {
+   var response = await http.post(CREATE_POST_URL,body: becomeAPartner.toJson());
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _saving = false;
+        showSuccessDialog();
+    //    _isSuccessful = true;
+      });
+    }
+    else if (response.statusCode < 200 || response.statusCode > 300) {
+      setState(() {
+        _saving = false;
+        showFailureDialog();
+        //    _isSuccessful=true;
+
+
+      });
+    }
+  /* try {
     final response = await _util.post('https://ptsv2.com/t/x02c5-1564789027/post',becomeAPartner.toJson() );
       print("Response status: ${response.body}");
     }
     catch (Exception) {
 print(Exception);
-    }
+    }*/
+  }
+  showSuccessDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Success"),
+            alertSubtitle: richSubtitle("Request successfully sent."),
+            alertType: RichAlertType.SUCCESS,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        });
+  }
+
+  showFailureDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle("Not Successful"),
+            alertSubtitle: richSubtitle("Please try again!!!"),
+            alertType: RichAlertType.ERROR,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee_flutter/marquee_flutter.dart';
 import 'package:one_africa_global/color/hex_color.dart';
+import 'package:one_africa_global/webviews/live_streaming_webview.dart';
 
 class LiveStreamScreen extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(
           'Live Streaming',
@@ -18,11 +20,11 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-    //    iconTheme: IconThemeData(color: Colors.indigo[900]),
+        //    iconTheme: IconThemeData(color: Colors.indigo[900]),
         elevation: 0.1,
         backgroundColor: FlutterColor("#071B42"),
       ),
-   /*   drawer: Drawer(
+      /*   drawer: Drawer(
         child: ListView(),
       ),*/
       body: Center(
@@ -40,8 +42,9 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
               child: Text(
-                  'Live stream of One Africa Music Fest attract a fee of \$0.99 If you have paid already. Enter you email to proceed',
-                  textAlign: TextAlign.center,),
+                'Live stream of One Africa Music Fest attract a fee of \$0.99 If you have paid already. Enter you email to proceed',
+                textAlign: TextAlign.center,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
@@ -59,14 +62,21 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LiveStreamWebView("Live Stream",
+                            "https://www.oneafricaglobal.com/home/OAMF-watch-live.php")));
+              },
               color: Colors.indigo[900],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
               child: Text(
-                  'If you have never used our streaming services pay one time fee to get started.',
-                  textAlign: TextAlign.center,),
+                'If you have never used our streaming services pay one time fee to get started.',
+                textAlign: TextAlign.center,
+              ),
             ),
             RaisedButton(
               child: Text(
@@ -75,35 +85,40 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LiveStreamWebView("Live Stream",
+                            "https://www.oneafricaglobal.com/home/OAMF-watch-live.php")));
+              },
               color: Colors.indigo[900],
             ),
             Container(
-                alignment: Alignment.center,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.topRight,
-                      /* stops: [0.4,0.8,0.9],*/
-                      colors: [
-                        FlutterColor("#071B42"),
-                        FlutterColor("#214776"),
-                        FlutterColor("#2E6AA5")
-                      ]),
-                ),
-
-                  child:
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:new MarqueeWidget(
-                      text: "One Africa Music Fest Returns NYC, London & Dubai",
-                      textStyle: new TextStyle(fontSize: 14.0,color: Colors.white),
-                      scrollAxis: Axis.horizontal
+              alignment: Alignment.center,
+              height: 40,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+                    /* stops: [0.4,0.8,0.9],*/
+                    colors: [
+                      FlutterColor("#071B42"),
+                      FlutterColor("#214776"),
+                      FlutterColor("#2E6AA5")
+                    ]),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new MarqueeWidget(
+                    text: "One Africa Music Fest Returns NYC, London & Dubai",
+                    textStyle:
+                        new TextStyle(fontSize: 14.0, color: Colors.white),
+                    scrollAxis: Axis.horizontal
                     //     ),
-                  ),
-                  ),
-                )
+                    ),
+              ),
+            )
           ],
         ),
       ),
