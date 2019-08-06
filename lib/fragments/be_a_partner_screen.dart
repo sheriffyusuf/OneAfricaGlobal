@@ -228,7 +228,6 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
   }
 
    sub(BeAPartner becomeAPartner) async {
-    HttpRequest _util = HttpRequest();
    var response = await http.post(CREATE_POST_URL,body: becomeAPartner.toJson());
     print("Response status: ${response.statusCode}");
     print("Response body: ${response.body}");
@@ -245,8 +244,6 @@ class _BeAPartnerScreenState extends State<BeAPartnerScreen> {
         _saving = false;
         showFailureDialog();
         //    _isSuccessful=true;
-
-
       });
     }
   /* try {
