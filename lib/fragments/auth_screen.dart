@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:one_africa_global/color/hex_color.dart';
 import 'package:one_africa_global/pages/main_page.dart';
 import 'package:one_africa_global/fragments/social_connect.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-
 
 class AuthScreen extends StatefulWidget {
 /*  final Function callback;
@@ -244,7 +243,7 @@ class _AuthScreenState extends State<AuthScreen>{
     if (response.statusCode == 200) {
       setState(() {
         _saving = false;
-        showSuccessDialog();
+        showFailureDialog();
         _isSuccessful = true;
       });
     }
@@ -323,7 +322,47 @@ class _AuthScreenState extends State<AuthScreen>{
     }
   }
   showSuccessDialog(){
-    showDialog(
+    EasyDialog(
+        closeButton: false,
+        cornerRadius: 10.0,
+        fogOpacity: 0.1,
+        width: 280,
+        height: 180,
+        title: Text(
+          "Email Subscription Successful",
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textScaleFactor: 1.2,
+        ),
+        descriptionPadding:
+        EdgeInsets.only(left: 17.5, right: 17.5, bottom: 15.0),
+        /*description: Text(
+          "This is a custom dihelps you easily create basic or custom dialogs.",
+          textScaleFactor: 1.1,
+          textAlign: TextAlign.center,
+        ),*/
+        /*topImage: NetworkImage(
+            "https://raw.githubusercontent.com/ricardonior29/easy_dialog/master/example/assets/topImageblack.png"),
+        */
+        topImage: AssetImage('assets/success.png'),
+        contentPadding:
+        EdgeInsets.only(top: 12.0), // Needed for the button design
+        contentList: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.greenAccent,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0))),
+            child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();},
+              child: Text("Okay",
+                textScaleFactor: 1.3,
+              ),),
+          ),
+        ]).show(context);
+    /*showDialog(
         context: context,
         builder: (BuildContext context) {
           return RichAlertDialog(
@@ -337,11 +376,48 @@ class _AuthScreenState extends State<AuthScreen>{
               ),
             ],
           );
-        });
+        });*/
   }
 
   showFailureDialog(){
-    showDialog(
+    EasyDialog(
+        closeButton: false,
+        cornerRadius: 10.0,
+        fogOpacity: 0.1,
+        width: 280,
+        height: 200,
+        title: Text(
+          "An error occured",
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textScaleFactor: 1.2,
+        ),
+        descriptionPadding:
+        EdgeInsets.only(left: 17.5, right: 17.5, bottom: 15.0),
+        description: Text(
+          "Please try again!!!",
+          textScaleFactor: 1.1,
+          textAlign: TextAlign.center,
+        ),
+       topImage: AssetImage('assets/error.png'),
+        contentPadding:
+        EdgeInsets.only(top: 12.0), // Needed for the button design
+        contentList: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.greenAccent,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0))),
+            child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();},
+              child: Text("Okay",
+                textScaleFactor: 1.3,
+              ),),
+          ),
+        ]).show(context);
+   /* showDialog(
         context: context,
         builder: (BuildContext context) {
           return RichAlertDialog(
@@ -356,6 +432,6 @@ class _AuthScreenState extends State<AuthScreen>{
             ],
           );
         }
-    );
+    );*/
   }
 }
