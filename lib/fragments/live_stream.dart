@@ -21,7 +21,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
         ),
         centerTitle: true,
         //    iconTheme: IconThemeData(color: Colors.indigo[900]),
-        elevation: 0.1,
+        elevation: 0.2,
         backgroundColor: FlutterColor("#071B42"),
       ),
       /*   drawer: Drawer(
@@ -35,7 +35,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
               padding: EdgeInsets.fromLTRB(32, 25, 32, 0),
               child: Icon(
                 Icons.wifi,
-                size: 45,
+                size: 44,
                 color: Colors.indigo,
               ),
             ),
